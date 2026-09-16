@@ -36,3 +36,22 @@ export function compressImage(file) {
     reader.readAsDataURL(file)
   })
 }
+
+// Rotates an existing base64 image (data URI) by 90 degrees clockwise.
+export function rotateImage(dataUrl) {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    img.onerror = () => reject(new Error('Nu am putut roti fotografia.'))
+    img.onload = () => {
+      const canvas = document.createElement('canvas')
+      canvas.width = img.height
+      canvas.height = img.width
+      const ctx = canvas.getContext('2d')
+      ctx.translate(canvas.width / 2, canvas.height / 2)
+      ctx.rotate(Math.PI / 2)
+      ctx.drawImage(img, -img.width / 2, -img.height / 2)
+      resolve(canvas.toDataURL('image/jpeg', JPEG_QUALITY))
+    }
+    img.src = dataUrl
+  })
+}

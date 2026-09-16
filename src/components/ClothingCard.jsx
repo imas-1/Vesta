@@ -17,7 +17,8 @@ const styles = {
     padding: 0,
     border: '1px solid var(--vesta-line)',
     textAlign: 'left',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    minWidth: 0
   },
   imgWrap: {
     width: '100%',

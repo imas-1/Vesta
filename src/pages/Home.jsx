@@ -15,8 +15,8 @@ export default function Home() {
 
       <div className="card" style={{ padding: 24, textAlign: 'center' }}>
         <p style={{ color: 'var(--vesta-gray)', fontSize: 14, lineHeight: 1.6 }}>
-          Baza aplicatiei este gata.<br />
-          Garderoba si Outfits vin in etapa urmatoare.
+          Garderoba ta te asteapta.<br />
+          Adauga haine si combina-le in tinute.
         </p>
       </div>
     </div>

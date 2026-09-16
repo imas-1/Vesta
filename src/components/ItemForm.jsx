@@ -123,8 +123,8 @@ export default function ItemForm({ initial, onSubmit, onCancel, submitLabel }) {
         />
       </div>
 
-      <div style={{ display: 'flex', gap: 12 }}>
-        <div className="field" style={{ flex: 1 }}>
+      <div style={{ display: 'flex', gap: 12, minWidth: 0 }}>
+        <div className="field" style={{ flex: 1, minWidth: 0 }}>
           <label>Brand (optional)</label>
           <input
             type="text"
@@ -133,7 +133,7 @@ export default function ItemForm({ initial, onSubmit, onCancel, submitLabel }) {
             onChange={(e) => setBrand(e.target.value)}
           />
         </div>
-        <div className="field" style={{ flex: 1 }}>
+        <div className="field" style={{ flex: 1, minWidth: 0 }}>
           <label>Sezon (optional)</label>
           <input
             type="text"

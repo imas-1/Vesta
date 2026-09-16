@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
 import { CATEGORIES } from '../firebase/items'
-import { compressImage } from '../utils/imageCompress'
+import { compressImage, rotateImage } from '../utils/imageCompress'
 
 export default function ItemForm({ initial, onSubmit, onCancel, submitLabel }) {
   const [photo, setPhoto] = useState(initial?.imageUrl || null)
@@ -24,6 +24,19 @@ export default function ItemForm({ initial, onSubmit, onCancel, submitLabel }) {
       setPhoto(compressed)
     } catch (err) {
       setError('Nu am putut procesa fotografia. Incearca alta poza.')
+    } finally {
+      setProcessingPhoto(false)
+    }
+  }
+
+  async function handleRotate() {
+    if (!photo) return
+    setProcessingPhoto(true)
+    try {
+      const rotated = await rotateImage(photo)
+      setPhoto(rotated)
+    } catch (err) {
+      setError('Nu am putut roti fotografia.')
     } finally {
       setProcessingPhoto(false)
     }
@@ -84,14 +97,24 @@ export default function ItemForm({ initial, onSubmit, onCancel, submitLabel }) {
         )}
       </button>
       {photo && !processingPhoto && (
-        <button
-          type="button"
-          className="btn-text"
-          style={{ alignSelf: 'center', padding: 0 }}
-          onClick={() => fileInputRef.current?.click()}
-        >
-          Schimba fotografia
-        </button>
+        <div style={{ display: 'flex', gap: 16, justifyContent: 'center' }}>
+          <button
+            type="button"
+            className="btn-text"
+            style={{ padding: 0 }}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            Schimba fotografia
+          </button>
+          <button
+            type="button"
+            className="btn-text"
+            style={{ padding: 0 }}
+            onClick={handleRotate}
+          >
+            Roteste
+          </button>
+        </div>
       )}
 
       <div className="field">

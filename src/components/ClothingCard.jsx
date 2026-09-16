@@ -1,14 +1,25 @@
-export default function ClothingCard({ item, onClick }) {
+export default function ClothingCard({ item, onClick, onToggleFavorite }) {
   return (
-    <button className="card" style={styles.card} onClick={onClick}>
-      <div style={styles.imgWrap}>
-        <img src={item.imageUrl} alt={item.name} style={styles.img} />
-      </div>
-      <div style={styles.info}>
-        <p style={styles.name}>{item.name}</p>
-        {item.color && <p style={styles.color}>{item.color}</p>}
-      </div>
-    </button>
+    <div className="card" style={styles.card}>
+      <button style={styles.cardBtn} onClick={onClick}>
+        <div style={styles.imgWrap}>
+          <img src={item.imageUrl} alt={item.name} style={styles.img} loading="lazy" />
+        </div>
+        <div style={styles.info}>
+          <p style={styles.name}>{item.name}</p>
+          {item.color && <p style={styles.color}>{item.color}</p>}
+        </div>
+      </button>
+      {onToggleFavorite && (
+        <button
+          style={styles.favBtn}
+          onClick={(e) => { e.stopPropagation(); onToggleFavorite() }}
+          aria-label="Favorit"
+        >
+          {item.favorite ? '⭐' : '☆'}
+        </button>
+      )}
+    </div>
   )
 }
 
@@ -16,9 +27,16 @@ const styles = {
   card: {
     padding: 0,
     border: '1px solid var(--vesta-line)',
-    textAlign: 'left',
-    cursor: 'pointer',
+    position: 'relative',
     minWidth: 0
+  },
+  cardBtn: {
+    width: '100%',
+    background: 'none',
+    border: 'none',
+    padding: 0,
+    textAlign: 'left',
+    cursor: 'pointer'
   },
   imgWrap: {
     width: '100%',
@@ -46,5 +64,19 @@ const styles = {
     fontSize: 11,
     color: 'var(--vesta-gray)',
     marginTop: 2
+  },
+  favBtn: {
+    position: 'absolute',
+    top: 6,
+    right: 6,
+    width: 28,
+    height: 28,
+    borderRadius: '50%',
+    background: 'rgba(10,10,10,0.55)',
+    border: 'none',
+    fontSize: 14,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 }

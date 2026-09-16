@@ -166,9 +166,8 @@ const styles = {
   },
   chipsRow: {
     display: 'flex',
+    flexWrap: 'wrap',
     gap: 8,
-    overflowX: 'auto',
-    paddingBottom: 4,
     marginTop: -8
   },
   chip: {
@@ -177,12 +176,11 @@ const styles = {
     border: '1px solid',
     fontSize: 12.5,
     fontWeight: 500,
-    whiteSpace: 'nowrap',
-    flexShrink: 0
+    whiteSpace: 'nowrap'
   },
   grid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(2, 1fr)',
+    gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
     gap: 12
   },
   detailImg: {

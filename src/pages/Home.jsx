@@ -1,4 +1,5 @@
 import { useAuth } from '../firebase/AuthContext'
+import EmailVerificationBanner from '../components/EmailVerificationBanner'
 
 export default function Home() {
   const { user } = useAuth()
@@ -12,6 +13,8 @@ export default function Home() {
           Buna, {firstName}
         </h1>
       </div>
+
+      <EmailVerificationBanner user={user} />
 
       <div className="card" style={{ padding: 24, textAlign: 'center' }}>
         <p style={{ color: 'var(--vesta-gray)', fontSize: 14, lineHeight: 1.6 }}>

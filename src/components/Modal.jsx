@@ -71,6 +71,8 @@ const styles = {
   },
   body: {
     padding: '0 20px 24px',
-    overflowY: 'auto'
+    overflowY: 'auto',
+    overflowX: 'hidden',
+    minWidth: 0
   }
 }

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth'
 import { auth } from '../firebase/config'
 
 export default function Register() {
@@ -21,7 +21,8 @@ export default function Register() {
 
     setLoading(true)
     try {
-      await createUserWithEmailAndPassword(auth, email.trim(), password)
+      const cred = await createUserWithEmailAndPassword(auth, email.trim(), password)
+      await sendEmailVerification(cred.user)
       navigate('/')
     } catch (err) {
       setError(mapAuthError(err.code))

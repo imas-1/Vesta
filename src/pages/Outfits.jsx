@@ -106,11 +106,13 @@ export default function Outfits() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           {outfits.map((outfit) => (
             <button key={outfit.id} className="card" style={styles.outfitCard} onClick={() => setSelectedOutfit(outfit)}>
-              <div style={styles.thumbRow}>
+              <div style={{ ...styles.thumbRow, gridTemplateColumns: `repeat(${Math.min(outfit.itemIds.length, 2)}, 1fr)` }}>
                 {outfit.itemIds.slice(0, 4).map((id) => {
                   const item = itemsById[id]
                   return item ? (
-                    <img key={id} src={item.imageUrl} alt={item.name} style={styles.thumb} loading="lazy" />
+                    <div key={id} style={styles.thumbCell}>
+                      <img src={item.imageUrl} alt={item.name} style={styles.thumb} loading="lazy" />
+                    </div>
                   ) : null
                 })}
               </div>
@@ -219,14 +221,21 @@ const styles = {
     width: '100%'
   },
   thumbRow: {
+    display: 'grid',
+    gap: 2
+  },
+  thumbCell: {
+    aspectRatio: '1',
+    overflow: 'hidden',
+    background: 'var(--vesta-charcoal)',
     display: 'flex',
-    height: 90
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   thumb: {
-    flex: 1,
+    width: '100%',
     height: '100%',
-    objectFit: 'cover',
-    borderRight: '1px solid var(--vesta-black)'
+    objectFit: 'contain'
   },
   detailGrid: {
     display: 'grid',
@@ -241,7 +250,8 @@ const styles = {
   detailImg: {
     width: '100%',
     aspectRatio: '1',
-    objectFit: 'cover',
+    objectFit: 'contain',
+    background: 'var(--vesta-charcoal)',
     borderRadius: 10
   },
   detailName: {

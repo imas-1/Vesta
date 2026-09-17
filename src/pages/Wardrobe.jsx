@@ -32,6 +32,10 @@ export default function Wardrobe() {
       setAddOpen(true)
       navigate(location.pathname, { replace: true, state: {} })
     }
+    if (location.state?.filterCategory) {
+      setActiveCategory(location.state.filterCategory)
+      navigate(location.pathname, { replace: true, state: {} })
+    }
   }, [location, navigate])
 
   useEffect(() => {

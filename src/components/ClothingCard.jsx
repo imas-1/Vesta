@@ -1,12 +1,51 @@
-export default function ClothingCard({ item, onClick, onToggleFavorite }) {
+import { useRef } from 'react'
+
+const LONG_PRESS_MS = 450
+
+export default function ClothingCard({ item, onClick, onToggleFavorite, onLongPress, large }) {
+  const timerRef = useRef(null)
+  const firedRef = useRef(false)
+
+  function startPress() {
+    firedRef.current = false
+    if (!onLongPress) return
+    timerRef.current = setTimeout(() => {
+      firedRef.current = true
+      onLongPress(item)
+    }, LONG_PRESS_MS)
+  }
+
+  function cancelPress() {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current)
+      timerRef.current = null
+    }
+  }
+
+  function handleClick(e) {
+    if (firedRef.current) {
+      e.preventDefault()
+      firedRef.current = false
+      return
+    }
+    onClick?.()
+  }
+
   return (
-    <div className="card" style={styles.card}>
-      <button style={styles.cardBtn} onClick={onClick}>
-        <div style={styles.imgWrap}>
-          <img src={item.imageUrl} alt={item.name} style={styles.img} loading="lazy" />
+    <div className="card" style={{ ...styles.card, ...(large ? styles.cardLarge : {}) }}>
+      <button
+        style={styles.cardBtn}
+        onClick={handleClick}
+        onPointerDown={startPress}
+        onPointerUp={cancelPress}
+        onPointerLeave={cancelPress}
+        onContextMenu={(e) => onLongPress && e.preventDefault()}
+      >
+        <div style={{ ...styles.imgWrap, ...(large ? styles.imgWrapLarge : {}) }}>
+          <img src={item.imageUrl} alt={item.name} style={{ ...styles.img, ...(large ? styles.imgLarge : {}) }} loading="lazy" />
         </div>
-        <div style={styles.info}>
-          <p style={styles.name}>{item.name}</p>
+        <div style={{ ...styles.info, ...(large ? styles.infoLarge : {}) }}>
+          <p style={{ ...styles.name, ...(large ? styles.nameLarge : {}) }}>{item.name}</p>
           {item.color && <p style={styles.color}>{item.color}</p>}
         </div>
       </button>
@@ -30,13 +69,15 @@ const styles = {
     position: 'relative',
     minWidth: 0
   },
+  cardLarge: {},
   cardBtn: {
     width: '100%',
     background: 'none',
     border: 'none',
     padding: 0,
     textAlign: 'left',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    WebkitTapHighlightColor: 'transparent'
   },
   imgWrap: {
     width: '100%',
@@ -44,13 +85,23 @@ const styles = {
     overflow: 'hidden',
     background: 'var(--vesta-charcoal)'
   },
+  imgWrapLarge: {
+    aspectRatio: '4 / 5',
+    background: 'var(--vesta-charcoal)'
+  },
   img: {
     width: '100%',
     height: '100%',
     objectFit: 'cover'
   },
+  imgLarge: {
+    objectFit: 'contain'
+  },
   info: {
     padding: '10px 12px 12px'
+  },
+  infoLarge: {
+    padding: '14px 16px 16px'
   },
   name: {
     fontSize: 13,
@@ -59,6 +110,9 @@ const styles = {
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis'
+  },
+  nameLarge: {
+    fontSize: 15
   },
   color: {
     fontSize: 11,

@@ -4,6 +4,7 @@ import { useAuth } from '../firebase/AuthContext'
 import { subscribeToItems, addItem, updateItem, deleteItem, CATEGORIES } from '../firebase/items'
 import { categoryIcon } from '../utils/categoryIcons'
 import ClothingCard from '../components/ClothingCard'
+import ZoomOverlay from '../components/ZoomOverlay'
 import Modal from '../components/Modal'
 import ItemForm from '../components/ItemForm'
 
@@ -20,6 +21,8 @@ export default function Wardrobe() {
   const [editing, setEditing] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [toast, setToast] = useState('')
+  const [view, setView] = useState('grid')
+  const [zoomItem, setZoomItem] = useState(null)
 
   useEffect(() => {
     if (!user) return
@@ -128,6 +131,23 @@ export default function Wardrobe() {
           <option value="nume">Nume A-Z</option>
           <option value="purtate">Purtate recent</option>
         </select>
+
+        <div style={styles.viewToggle}>
+          <button
+            style={{ ...styles.viewBtn, ...(view === 'grid' ? styles.viewBtnActive : {}) }}
+            onClick={() => setView('grid')}
+            aria-label="Grid"
+          >
+            ▦
+          </button>
+          <button
+            style={{ ...styles.viewBtn, ...(view === 'closet' ? styles.viewBtnActive : {}) }}
+            onClick={() => setView('closet')}
+            aria-label="Closet"
+          >
+            ▤
+          </button>
+        </div>
       </div>
 
       <div style={styles.chipsRow}>
@@ -157,17 +177,21 @@ export default function Wardrobe() {
           </p>
         </div>
       ) : (
-        <div style={styles.grid}>
+        <div style={view === 'closet' ? styles.closetGrid : styles.grid}>
           {filteredItems.map((item) => (
             <ClothingCard
               key={item.id}
               item={item}
+              large={view === 'closet'}
               onClick={() => setSelectedItem(item)}
               onToggleFavorite={() => handleToggleFavorite(item)}
+              onLongPress={(it) => setZoomItem(it)}
             />
           ))}
         </div>
       )}
+
+      <ZoomOverlay item={zoomItem} onClose={() => setZoomItem(null)} />
 
       <Modal open={addOpen} onClose={() => setAddOpen(false)} title="Haina noua">
         <ItemForm onSubmit={handleAdd} onCancel={() => setAddOpen(false)} submitLabel="Salveaza" />
@@ -301,6 +325,31 @@ const styles = {
     display: 'grid',
     gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
     gap: 12
+  },
+  closetGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(1, minmax(0, 1fr))',
+    gap: 14
+  },
+  viewToggle: {
+    display: 'flex',
+    marginLeft: 'auto',
+    border: '1px solid var(--vesta-line)',
+    borderRadius: 8,
+    overflow: 'hidden'
+  },
+  viewBtn: {
+    background: 'var(--vesta-panel)',
+    border: 'none',
+    color: 'var(--vesta-gray)',
+    fontSize: 14,
+    padding: '6px 10px',
+    cursor: 'pointer',
+    lineHeight: 1
+  },
+  viewBtnActive: {
+    background: 'var(--vesta-cream)',
+    color: 'var(--vesta-black)'
   },
   detailImg: {
     width: '100%',
